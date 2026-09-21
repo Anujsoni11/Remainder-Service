@@ -1,8 +1,8 @@
 const { NotificationTicket } = require('../models/index');
+const notificationticket = require('../models/notificationticket');
 
-const { Op } = require('sequelize');
+class TicketRepository{
 
-class TicketRepository {
     async getAll() {
         try {
             const tickets = await NotificationTicket.findAll();
@@ -12,38 +12,34 @@ class TicketRepository {
         }
     }
 
-    async create(data) {
+    async create(data){
         try {
-            const ticket = NotificationTicket.create(data);
-            return ticket;
+            const ticket = await NotificationTicket.create(data);
+            return ticket; 
         } catch (error) {
             throw error;
         }
     }
 
-    async get(filter) {
+    async get(filter){
         try {
-            const tickets = await NotificationTicket.findAll({
+            const tickets = await Notification.findAll({
                 where: {
                     status: filter.status,
                     notificationTime: {
                         [Op.lte]: new Date()
                     }
                 }
-            })
+            });
             return tickets;
         } catch (error) {
             throw error;
         }
     }
-
-
-    async update(ticketId, data) {
+    async update(ticketId, data){
         try {
-            const ticket = await NotificationTicket.findByPk(ticketId);
-            if (data.status) {
-                ticket.status = data.status
-            }
+            const ticket = await Notification.findByPk(ticketId);
+            if(data.status) ticket.status = data.status;
             await ticket.save();
             return ticket;
         } catch (error) {
